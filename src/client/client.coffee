@@ -24,17 +24,23 @@ class factory.pawn extends Model
 	constructor : ->				
 		super
 		
-		looping = true
+		animating = false
 		draw = => 			
-			return unless looping
 			@sync()
+			return unless animating
 			process.nextTick draw
-		draw()
 
-		@on 'change:pos', => @sync()
+		@on 'change:pos', draw
+		@on 'change:vel', (v) ->
+			moving = not (v[0] == 0 and v[1] == 0)
+			shouldDraw = not animating and draw
+			animating = moving
+			
+			draw() if shouldDraw
+			
 		@on 'dispose', => 
 			@p.remove()
-			looping = false
+			animating = false
 
 	sync : ->
 		unless @p? 
