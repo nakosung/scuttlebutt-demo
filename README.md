@@ -3,11 +3,15 @@
 
 Tiny project to demonstrate what scuttlebutt can offer. 
 
+```
 server -l [tcp-port] -c [tcp-port] -w [http-port]
+```
 
--l : listens at 
--c : connects to
--w : host web server 
+| Option | desc |
+| ------ | --- |
+| -l | listens at |
+| -c | connects to |
+| -w | host web server |
 
 How to run
 --
