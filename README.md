@@ -9,6 +9,13 @@ server -l [tcp-port] -c [tcp-port] -w [http-port]
 -c : connects to
 -w : host web server 
 
+How to run
+--
+
+```
+grunt
+```
+
 Test configuration
 --
 
