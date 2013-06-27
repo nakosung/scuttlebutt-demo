@@ -17,6 +17,10 @@
 		<div raphael></div>
 		<button ng-class="{btn:true,'disabled':is_connected()}" ng-click="connect()">Connect</button>
 		<button ng-class="{btn:true,'disabled':!is_connected()}" ng-click="disconnect()">Disconnect</button>
+		<form>
+			<input type="text" class="search-query" placeholder="Color" ng-model="fill">
+			<button class="btn" ng-click="set_fill(fill)">ChangeColor</button>
+		</form>
 	</div>		
 </body>
 </html>

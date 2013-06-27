@@ -3,9 +3,36 @@ Model = require 'scuttlebutt/model'
 events = require 'events'
 MuxDemux = require 'mux-demux'
 
+class BaseModel extends Model
+	constructor : ->
+		super
+
+		@support = 0
+
+		wasPersistent = false
+		@on 'change:persistent', (val) ->
+			if not wasPersistent and val
+				wasPersistent = true
+				@incSupport()
+			else if wasPersistent and not val
+				wasPersistent = false
+				@decSupport()
+
+	incSupport : ->
+		@support++
+		console.log 'inc support', @id, @support
+
+	decSupport : ->
+		console.log 'dec support', @id, @support
+		@dispose() if --@support == 0	
+
+	supportBy : (stream) ->
+		@incSupport()
+		stream.on 'end', => @decSupport()
+
 factory = (path) ->
 	[type] = path.split('.')
-	Class = factory[type] or Model
+	Class = factory[type] or BaseModel
 	new Class id:path
 
 node = ->
@@ -42,6 +69,7 @@ node = ->
 	
 	fn = (stream) -> 
 		console.log 'got stream connected'
+
 		# tracking in-out models
 		streams = {}
 		tap = (stream,id) ->
@@ -55,7 +83,9 @@ node = ->
 			{id} = params
 			console.log 'getting', id
 			tap stream, id
-			stream.pipe(entity(id).createStream()).pipe(stream)
+			e = entity(id)
+			e.supportBy(stream)			
+			stream.pipe(e.createStream()).pipe(stream)
 		
 		mx = MuxDemux(router)		
 
@@ -93,4 +123,4 @@ node = ->
 
 module.exports.node = node
 module.exports.factory = factory
-module.exports.Model = Model
+module.exports.Model = BaseModel

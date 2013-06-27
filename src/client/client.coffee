@@ -30,13 +30,27 @@ class factory.pawn extends Model
 			return unless animating
 			process.nextTick draw
 
-		@on 'change:pos', draw
+		@on 'change:pos', (p) =>
+			pos = extrapolate @	
+
+			# print out some extrpolation error
+			if pos? and p?
+				dx = pos[0] - p[0]
+				dy = pos[1] - p[1]
+				ersq = dx*dx + dy*dy
+				console.log 'error squared', ersq if ersq > 1
+
+			draw()
+
 		@on 'change:vel', (v) ->
 			moving = not (v[0] == 0 and v[1] == 0)
 			shouldDraw = not animating and draw
 			animating = moving
 			
 			draw() if shouldDraw
+
+		@on 'change:col', (c) ->
+			@rect?.attr 'fill', c
 			
 		@on 'dispose', => 
 			@p.remove()
@@ -46,12 +60,12 @@ class factory.pawn extends Model
 		unless @p? 
 			return unless paper
 			@p = paper.set()			
-			rect = paper.rect(-12,-12,24,24)
-			rect.attr 'fill':'red'
-			text = paper.text(0,-5,@id)
+			@rect = paper.rect(-12,-12,24,24)
+			@rect.attr 'fill':'red'
+			text = paper.text(0,-5,@id).attr(font:'italic 20px Georgia',transform:'r-10')			
 			text.hide()
-			rect.hover (-> text.show()), (-> text.hide())
-			@p.push rect, text
+			@rect.hover (-> text.show()), (-> text.hide())
+			@p.push @rect, text
 
 		pos = extrapolate @
 		if pos 
@@ -77,6 +91,7 @@ ng.factory 'mypawn', (node) ->
 	e = node().entity
 	rand_id = Math.random().toString(36).substr(2,5)
 	p = e("pawn.#{rand_id}")	
+	p.support++
 	-> p
 
 ng.factory 'controller', (mypawn) ->
@@ -140,5 +155,8 @@ ng.controller 'MainCtrl', ($scope,mypawn,controller,node) ->
 
 		connection.destroy()
 		connection = null
+
+	$scope.set_fill = (color) ->
+		p.set 'col', color
 
 	$scope.connect()
