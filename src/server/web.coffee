@@ -2,6 +2,7 @@
 
 express = require 'express'
 shoe = require 'shoe'
+sockjs = require 'sockjs'
 
 module.exports = (port,n) ->
 	n = n or node()
@@ -15,3 +16,8 @@ module.exports = (port,n) ->
 
 	sock = shoe n
 	sock.install server, '/dnode'
+
+	sjs = sockjs.createServer()
+	sjs.on 'connection', n
+	sjs.installHandlers server, prefix:'/sockjs'
+	
