@@ -4,7 +4,7 @@ n = node()
 _ = require 'underscore'
 
 argv = require('optimist')
-	.usage('Usage: -c [port] -l [port] -w [port]')	
+	.usage('Usage: -c [port] -l [port] -w [port] -s [sockjs]')	
 	.argv
 
 each = (x,y) ->
@@ -17,3 +17,4 @@ each = (x,y) ->
 each argv.w, (p) -> require('./web')(p,n)
 each argv.l, (p) -> require('./tcpserver')(p,n)
 each argv.c, (p) -> require('./tcpclient')(p,n)
+each argv.s, (p) -> require('./sockjsclient')(p,n)

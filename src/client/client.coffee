@@ -31,7 +31,7 @@ class factory.pawn extends Model
 			process.nextTick draw
 
 		@on 'change:pos', (p) =>
-			pos = extrapolate @	
+			pos = extrapolate @
 
 			# print out some extrpolation error
 			if pos? and p?
