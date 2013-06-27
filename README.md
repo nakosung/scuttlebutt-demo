@@ -3,8 +3,6 @@
 
 Tiny project to demonstrate what scuttlebutt can offer. 
 
-[Check heroku app](http://scuttlebutt-demo.herokuapp.com)
-
 ```
 server -l [tcp-port] -c [tcp-port] -w [http-port]
 ```
