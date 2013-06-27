@@ -15,4 +15,4 @@ results
 npm-debug.log
 node_modules
 
-~build/client/bundle.js
+!build/client/bundle.js
