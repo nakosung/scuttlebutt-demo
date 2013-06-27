@@ -1,1 +1,1 @@
-web:node src/server/heroku.js
+web: coffee src/server/heroku.coffee
