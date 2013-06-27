@@ -6,6 +6,10 @@ argv = require('optimist')
 	.usage('Usage: -c [port] -l [port] -w [port]')	
 	.argv
 
+# for heroku
+if argv.heroku	
+	argv.w = process.env.PORT
+
 if argv.w?
 	port = argv.w
 	
